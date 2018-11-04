@@ -1,4 +1,6 @@
 version: "3"
+
+# Holds ext. dependency services
 services:
   syslog-ng:
     image : balabit/syslog-ng:latest
