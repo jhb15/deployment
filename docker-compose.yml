@@ -5,8 +5,7 @@ services:
   syslog-ng:
     image : balabit/syslog-ng:latest
     hostname: syslog
-    restart: always
-    command: "--no-caps"
+    command: "--no-caps --foreground"
 
     cap_drop:
       - ALL
@@ -18,8 +17,24 @@ services:
     volumes:
       # Map custom config in
       - ./conf/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf
-      - ./mount/syslog-ng:/var/log/syslog
+      - ./mount/syslog-ng/log:/var/log
 
     ports:
       - "601:601"
       - "514:514"
+
+  maria-db:
+    image: mariadb:latest
+    hostname : mariadb
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - ./mount/maria-db:/var/lib/mysql
+
+    # If a password is not present this will exit out
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      # For testing you could also use the followig line
+      # - MYSQL_ROOT_PASSWORD=your_pass
