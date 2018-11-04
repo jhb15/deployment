@@ -17,7 +17,7 @@ services:
     volumes:
       # Map custom config in
       - ./conf/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf
-      - ./mount/syslog-ng/log:/var/log
+      - syslog-logs:/var/log
 
     ports:
       - "601:601"
@@ -31,10 +31,15 @@ services:
       - "3306:3306"
 
     volumes:
-      - ./mount/maria-db:/var/lib/mysql
+      - mariadb-store:/var/lib/mysql
 
     # If a password is not present this will exit out
     environment:
       - MYSQL_ROOT_PASSWORD
       # For testing you could also use the followig line
       # - MYSQL_ROOT_PASSWORD=your_pass
+
+
+volumes:
+  syslog-logs:
+  mariadb-store:

@@ -19,3 +19,12 @@ Holds docker files for local and production development
 `export MYSQL_ROOT_PASSWORD=yourPass`
 2. If you are running it as root (see above, you shouldn't), you require the -E flag. For example
 `sudo -E docker-compose up`
+
+## Resetting filestore
+1. Ensure all containers are stopped
+`docker-compose down`
+2. Prune unused containers to remove all
+`docker volume prune`
+3. (Alternative) Remove one container
+`docker volume list`
+`docker volume rm VOL_NAME`
