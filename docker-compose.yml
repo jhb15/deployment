@@ -35,7 +35,7 @@ services:
 
 ## AberFitness containers
   gatekeeper:
-    image: sem56402018/gatekeeper:${DOCKER_ENVIRONMENT}
+    image: sem56402018/gatekeeper:${DEPLOYMENT_TAG}
     volumes:
       - af_gatekeeper_certs:/certs
       - af_gatekeeper_keys:/keys
@@ -54,4 +54,5 @@ volumes:
   ex_mariadb_data:
   ex_nginx_logs:
   af_gatekeeper_certs:
-  af_gatekeeper_keeys:
+  af_gatekeeper_keys:
+  
