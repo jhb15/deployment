@@ -1,51 +1,57 @@
 version: "3"
 
-# Holds ext. dependency services
 services:
-  syslog-ng:
+## External containers
+  syslogng:
     image : balabit/syslog-ng:latest
     command: "--no-caps --foreground"
-
     cap_drop:
       - ALL
-
-    cap_add:
-      # Allows us to bind to port 601
-      - NET_BIND_SERVICE
-
     volumes:
-      # Map custom config in
-      - ./conf/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf
-      - syslog-logs:/var/log
+      - ./conf/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro
+      - ex_syslog_logs:/var/log
+    networks:
+      - aberfitness
 
-    ports:
-      - "601:601"
-      - "514:514"
-
-  maria-db:
+  mariadb:
     image: mariadb:latest
-
-    ports:
-      - "3306:3306"
-
     volumes:
-      - mariadb-store:/var/lib/mysql
+      - ex_mariadb_data:/var/lib/mysql
+    env_file:
+      - mariadb.env
+    networks:
+      - aberfitness
 
-    # If a password is not present this will exit out
-    environment:
-      - MYSQL_ROOT_PASSWORD
-      # For testing you could also use the followig line
-      # - MYSQL_ROOT_PASSWORD=your_pass
-
-  nginx-proxy:
+  nginx:
     image: nginx:latest
     ports:
       - 80:80
       - 443:443
-    
     volumes:
-      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ex_nginx_logs:/var/log/nginx/
+    networks:
+      - aberfitness
+
+## AberFitness containers
+  gatekeeper:
+    image: sem56402018/gatekeeper:${DOCKER_ENVIRONMENT}
+    volumes:
+      - af_gatekeeper_certs:/certs
+      - af_gatekeeper_keys:/keys
+    env_file:
+      - gatekeeper.env
+    networks:
+      - aberfitness
+    depends_on:
+      - "mariadb"
+
+networks:
+  aberfitness:
 
 volumes:
-  syslog-logs:
-  mariadb-store:
+  ex_syslog_logs:
+  ex_mariadb_data:
+  ex_nginx_logs:
+  af_gatekeeper_certs:
+  af_gatekeeper_keeys:
