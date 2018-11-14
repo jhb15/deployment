@@ -18,7 +18,7 @@ services:
     volumes:
       - ex_mariadb_data:/var/lib/mysql
     env_file:
-      - mariadb.env
+      - ${ENV_PATH}/mariadb.env
     networks:
       - aberfitness
 
@@ -40,7 +40,7 @@ services:
       - af_gatekeeper_certs:/certs
       - af_gatekeeper_keys:/keys
     env_file:
-      - gatekeeper.env
+      - ${ENV_PATH}/gatekeeper.env
     networks:
       - aberfitness
     depends_on:
