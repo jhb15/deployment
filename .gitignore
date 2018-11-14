@@ -1,2 +1,3 @@
 # Avoid accidentally comitting .env files with secrets
 *.env
+!*.example.env
