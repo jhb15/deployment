@@ -35,6 +35,8 @@ services:
       - ex_shared_certificates:/certs/:ro
     networks:
       - aberfitness
+    depends_on:
+      - gatekeeper
 
 
 ## AberFitness containers
@@ -48,7 +50,7 @@ services:
     networks:
       - aberfitness
     depends_on:
-      - "mariadb"
+      - mariadb
 
 networks:
   aberfitness:
