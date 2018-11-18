@@ -22,15 +22,6 @@ services:
     networks:
       - aberfitness
 
-  mssql:
-    image: mcr.microsoft.com/mssql/server:latest
-    volumes:
-      - ex_mssql_data:/var/opt/mssql
-    env_file:
-      - mssql.env
-    networks:
-      - aberfitness
-
   nginx:
     image: nginx:latest
     ports:
@@ -62,7 +53,6 @@ networks:
 volumes:
   ex_syslog_logs:
   ex_mariadb_data:
-  ex_mssql_data:
   ex_nginx_logs:
   af_gatekeeper_certs:
   af_gatekeeper_keys:
