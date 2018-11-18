@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 
 services:
 ## External containers
@@ -15,6 +15,8 @@ services:
 
   mariadb:
     image: mariadb:latest
+    ports:
+      - 3306:3306
     volumes:
       - ex_mariadb_data:/var/lib/mysql
     env_file:
