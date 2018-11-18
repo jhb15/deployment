@@ -52,6 +52,15 @@ services:
     depends_on:
       - mariadb
 
+  health-data-repository:
+    image: sem56402018/health-data-repository:${DEPLOYMENT_TAG}
+    env_file:
+      - env/health-data-repository.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
 networks:
   aberfitness:
 
