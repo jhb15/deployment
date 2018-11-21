@@ -54,6 +54,8 @@ services:
 
   health-data-repository:
     image: sem56402018/health-data-repository:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
     env_file:
       - env/health-data-repository.env
     networks:
@@ -63,6 +65,8 @@ services:
 
   health-dashboard:
     image: sem56402018/health-dashboard:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
     env_file:
       - env/health-dashboard.env
     networks:
