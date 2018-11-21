@@ -61,6 +61,15 @@ services:
     depends_on:
       - mariadb
 
+  health-dashboard:
+    image: sem56402018/health-dashboard:${DEPLOYMENT_TAG}
+    env_file:
+      - env/health-dashboard.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
 networks:
   aberfitness:
 
