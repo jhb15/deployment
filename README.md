@@ -1,30 +1,87 @@
-# deployment
-Holds docker files for local and production development
+# AberFitness Deployment
 
-# Running dependencies locally
-`docker-compose up`
+Contains files required to deploy AberFitness on a docker host in both Staging and Production environments.
 
-# Running a service image
-`docker-compose -f docker-compose.ServiceName.yml - f docker-compose.yml up`
+## Requirements
 
-# Common problems
-## Need Sudo to run these / could not connect to Docker service
-1. Ensure the current user is added to the docker group
-`sudo usermod -a -G docker $USER`
-2. Log out and back into session
-3. Run all docker commands without sudo
+The deployment has only been verified as working on the docker hosts we were provided, which have the following versions:
+* Docker 18.09.0
+* Docker Compose 1.8.0
 
-## The MYSQL_ROOT_PASSWORD env variable is not set
-1. Ensure that you export the env. variable like so
-`export MYSQL_ROOT_PASSWORD=yourPass`
-2. If you are running it as root (see above, you shouldn't), you require the -E flag. For example
-`sudo -E docker-compose up`
+## Environment Variables
 
-## Resetting filestore
-1. Ensure all containers are stopped
-`docker-compose down`
-2. Prune unused containers to remove all
-`docker volume prune`
-3. (Alternative) Remove one container
-`docker volume list`
-`docker volume rm VOL_NAME`
+Environment variables are used to configure docker-compose and the services being launched.
+
+### Docker-Compose .env
+
+A top level `.env` file is required, which applies to the whole docker-compose file.  Only a single value is required in this file, `DEPLOYMENT_TAG` with valid values being `staging` or `latest`.
+This value defines whether the staging or latest images of our services will be pulled from Docker Hub.
+```env
+DEPLOYMENT_TAG=staging
+```
+
+### Service .env
+
+Each service has an `.env` file within the `env` folder, i.e. for gatekeeper the env file is `env/gatekeeper.env`.  Environment variables set within this file are specific to containers running that service only.
+Some example .env files are included in the `example_env` folder, however these may not be up-to-date with the latest variables for the service being deployed, so check the service-specific documentation to see which environment variables need setting.
+
+
+### Certificates
+
+A number of certificates are required for the services to work correctly in production.
+
+Create a volume for shared certificates within the deployment stack.
+```sh
+docker volume create deployment_shared_certs
+```
+
+Mount the volume inside a temporary container to allow you to manipulate data within the volume.
+
+```sh
+docker run --name tempubuntu -v deployment_shared_certs:/certs -it ubuntu
+```
+
+From another terminal, copy in your archive containing the SSL certificates required by nginx.
+```sh
+docker cp aberfitness.tar tempubuntu:/certs
+```
+
+Inside the docker container, extract the certificates
+```sh
+tar -xf aberfitness.biz
+```
+The SSL certificates should now exist within the temporary container at `/certs/aberfitness.biz/fullchain.cer` and `/certs/aberfitness.biz/aberfitness.biz.key`.
+
+Create the certificates required by all .NET containers:
+```sh
+mkdir /certs/shared
+cd /certs/shared
+openssl genrsa -des3 -passout pass:httpscertpassword -out https.key 2048
+openssl rsa -passin pass:httpscertpassword -in https.key -out https.key
+openssl req -sha256 -new -key https.key -out https.csr -subj '/CN=localhost'
+openssl x509 -req -sha256 -days 365 -in https.csr -signkey https.key -out https.crt
+openssl pkcs12 -export -out https.pfx -inkey https.key -in https.crt -certfile https.crt -passout pass:httpscertpassword
+```
+
+Create the certificates required by Gatekeeper:
+
+```sh
+mkdir /certs/gatekeeper
+cd /certs/gatekeeper
+```
+Follow the instructions at https://github.com/sem5640-2018/gatekeeper/blob/development/docs/certificates.md to generate the required certificates inside `/certs/gatekeeper`
+
+Clean up the temporary container you used
+```
+exit
+docker container rm tempubuntu
+```
+
+## Deploying
+
+Once all environment variables have been set, run:
+
+```sh
+docker-compose pull
+docker-compose up -d
+```
