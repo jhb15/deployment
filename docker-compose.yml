@@ -74,6 +74,17 @@ services:
     depends_on:
       - mariadb
 
+  booking-facilities:
+    image: sem56402018/booking-facilities:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/booking-facilities.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
 networks:
   aberfitness:
 
