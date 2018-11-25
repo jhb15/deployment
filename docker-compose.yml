@@ -37,6 +37,8 @@ services:
       - aberfitness
     depends_on:
       - gatekeeper
+      - health-data-repository
+      - health-dashboard
 
 
 ## AberFitness containers
