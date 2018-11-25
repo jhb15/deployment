@@ -39,6 +39,7 @@ services:
       - gatekeeper
       - health-data-repository
       - health-dashboard
+      - booking-facilities
 
 
 ## AberFitness containers
