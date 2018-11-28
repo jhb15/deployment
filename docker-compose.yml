@@ -40,6 +40,7 @@ services:
       - health-data-repository
       - health-dashboard
       - booking-facilities
+      - comms
 
 
 ## AberFitness containers
@@ -87,6 +88,15 @@ services:
       - aberfitness
     depends_on:
       - mariadb
+
+  comms:
+    image: sem56402018/comms:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/comms.env
+    networks:
+      - aberfitness
 
 networks:
   aberfitness:
