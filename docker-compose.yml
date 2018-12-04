@@ -39,7 +39,7 @@ services:
       - comms
       - booking-facilities
       - gatekeeper
-      - glados
+      # - glados
       - health-dashboard
       - health-data-repository
 
@@ -65,17 +65,17 @@ services:
     depends_on:
       - mariadb
 
-  fitbit-ingest-service:
-    image: sem56402018/fitbit-ingest-service:${DEPLOYMENT_TAG}
-    volumes:
-      - shared_certs:/certs:ro
-    env_file:
-      - env/fitbit-ingest-service.env
-    networks:
-      - aberfitness
-    depends_on:
-      - mariadb
-      - syslogng
+  # fitbit-ingest-service:
+  #   image: sem56402018/fitbit-ingest-service:${DEPLOYMENT_TAG}
+  #   volumes:
+  #     - shared_certs:/certs:ro
+  #   env_file:
+  #     - env/fitbit-ingest-service.env
+  #   networks:
+  #     - aberfitness
+  #   depends_on:
+  #     - mariadb
+  #     - syslogng
 
   gatekeeper:
     image: sem56402018/gatekeeper:${DEPLOYMENT_TAG}
@@ -89,15 +89,15 @@ services:
     depends_on:
       - mariadb
 
-  glados:
-    image: sem56402018/glados:${DEPLOYMENT_TAG}
-    env_file:
-      - env/glados.env
-    networks: 
-      - aberfitness
-    depends_on:
-      - mariadb
-      - syslogng
+  # glados:
+  #   image: sem56402018/glados:${DEPLOYMENT_TAG}
+  #   env_file:
+  #     - env/glados.env
+  #   networks: 
+  #     - aberfitness
+  #   depends_on:
+  #     - mariadb
+  #     - syslogng
 
   health-dashboard:
     image: sem56402018/health-dashboard:${DEPLOYMENT_TAG}
