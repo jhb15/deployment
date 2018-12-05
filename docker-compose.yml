@@ -131,7 +131,7 @@ services:
     networks:
       - aberfitness
     depends_on:
-      - mariad
+      - mariadb
 
 
 networks:
