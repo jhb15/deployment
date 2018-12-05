@@ -93,12 +93,6 @@ services:
     image: sem56402018/glados:${DEPLOYMENT_TAG}
     env_file:
       - env/glados.env
-    environment:
-      # TODO remove remote debugging
-      - JAVA_OPTS=\"-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n\"
-    ports:
-      - 8000:8000
-    
     networks: 
       - aberfitness
     depends_on:
