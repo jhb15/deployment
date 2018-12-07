@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
 ## External containers
@@ -43,7 +43,7 @@ services:
       - health-dashboard
       - health-data-repository
       - user-groups
-
+      - challenges
 
 ## AberFitness containers
   comms:
@@ -132,7 +132,17 @@ services:
       - aberfitness
     depends_on:
       - mariadb
-
+  
+  challenges:
+    image: sem56402018/challenges:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/challenges.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
 
 networks:
   aberfitness:
