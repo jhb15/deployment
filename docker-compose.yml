@@ -44,6 +44,7 @@ services:
       - health-data-repository
       - user-groups
       - challenges
+      - layout-service
 
 ## AberFitness containers
   comms:
@@ -139,6 +140,17 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/challenges.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  layout-service:
+    image: sem56402018/layout-service:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/layout-service.env
     networks:
       - aberfitness
     depends_on:
