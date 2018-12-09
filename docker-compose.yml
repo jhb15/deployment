@@ -36,17 +36,31 @@ services:
     networks:
       - aberfitness
     depends_on:
+      - challenges
       - comms
       - booking-facilities
       - gatekeeper
       - glados
       - health-dashboard
       - health-data-repository
-      - user-groups
-      - challenges
+      - ladders
       - layout-service
+      - user-groups
+
+
 
 ## AberFitness containers
+  booking-facilities:
+    image: sem56402018/booking-facilities:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/booking-facilities.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
   comms:
     image: sem56402018/comms:${DEPLOYMENT_TAG}
     volumes:
@@ -56,12 +70,12 @@ services:
     networks:
       - aberfitness
 
-  booking-facilities:
-    image: sem56402018/booking-facilities:${DEPLOYMENT_TAG}
+  challenges:
+    image: sem56402018/challenges:${DEPLOYMENT_TAG}
     volumes:
       - shared_certs:/certs:ro
     env_file:
-      - env/booking-facilities.env
+      - env/challenges.env
     networks:
       - aberfitness
     depends_on:
@@ -123,23 +137,12 @@ services:
     depends_on:
       - mariadb
 
-  user-groups:
-    image: sem56402018/user-groups:${DEPLOYMENT_TAG}
+  ladders-service:
+    image: sem56402018/ladders:${DEPLOYMENT_TAG}
     volumes:
       - shared_certs:/certs:ro
     env_file:
-      - env/user-groups.env
-    networks:
-      - aberfitness
-    depends_on:
-      - mariadb
-  
-  challenges:
-    image: sem56402018/challenges:${DEPLOYMENT_TAG}
-    volumes:
-      - shared_certs:/certs:ro
-    env_file:
-      - env/challenges.env
+      - env/ladders.env
     networks:
       - aberfitness
     depends_on:
@@ -151,6 +154,17 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/layout-service.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  user-groups:
+    image: sem56402018/user-groups:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/user-groups.env
     networks:
       - aberfitness
     depends_on:
