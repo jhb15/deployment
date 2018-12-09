@@ -137,7 +137,7 @@ services:
     depends_on:
       - mariadb
 
-  ladders-service:
+  ladders:
     image: sem56402018/ladders:${DEPLOYMENT_TAG}
     volumes:
       - shared_certs:/certs:ro
