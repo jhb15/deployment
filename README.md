@@ -14,10 +14,10 @@ Environment variables are used to configure docker-compose and the services bein
 
 ### Docker-Compose .env
 
-A top level `.env` file is required, which applies to the whole docker-compose file.  Only a single value is required in this file, `DEPLOYMENT_TAG` with valid values being `staging` or `latest`.
-This value defines whether the staging or latest images of our services will be pulled from Docker Hub.
+A top level `.env` file is required, which provides environment variables to the whole docker-compose file.
 ```env
-DEPLOYMENT_TAG=staging
+DEPLOYMENT_TAG=staging # valid values staging or latest
+Layout__LayoutServiceUrl=https://docker2.aberfitness.biz/layout-service/ # url to the layout service
 ```
 
 ### Service .env
