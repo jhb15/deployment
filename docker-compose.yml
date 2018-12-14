@@ -56,6 +56,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/booking-facilities.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
@@ -67,6 +69,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/comms.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
 
@@ -76,6 +80,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/challenges.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
@@ -100,6 +106,8 @@ services:
       - shared_keys:/keys:rw
     env_file:
       - env/gatekeeper.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
@@ -121,6 +129,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/health-dashboard.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
@@ -132,6 +142,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/health-data-repository.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
@@ -143,6 +155,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/ladders.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
@@ -154,6 +168,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/layout-service.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
@@ -165,6 +181,8 @@ services:
       - shared_certs:/certs:ro
     env_file:
       - env/user-groups.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
     networks:
       - aberfitness
     depends_on:
