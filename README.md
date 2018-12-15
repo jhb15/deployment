@@ -18,6 +18,7 @@ A top level `.env` file is required, which provides environment variables to the
 ```env
 DEPLOYMENT_TAG=staging # valid values staging or latest
 Layout__LayoutServiceUrl=https://docker2.aberfitness.biz/layout-service/ # url to the layout service
+Audit__GladosUrl=https://docker2.aberfitness.biz/glados/ # url to the audit service
 ```
 
 ### Service .env
