@@ -2,17 +2,6 @@ version: "2"
 
 services:
 ## External containers
-  syslogng:
-    image : balabit/syslog-ng:latest
-    command: "--no-caps --foreground"
-    cap_drop:
-      - ALL
-    volumes:
-      - ./conf/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro
-      - syslog_logs:/var/log:rw
-    networks:
-      - aberfitness
-
   mariadb:
     image: mariadb:latest
     command: "--max_connections=1000"
