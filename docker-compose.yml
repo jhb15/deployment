@@ -1,0 +1,210 @@
+version: "2"
+
+services:
+## External containers
+  syslogng:
+    image : balabit/syslog-ng:latest
+    command: "--no-caps --foreground"
+    cap_drop:
+      - ALL
+    volumes:
+      - ./conf/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro
+      - syslog_logs:/var/log:rw
+    networks:
+      - aberfitness
+
+  mariadb:
+    image: mariadb:latest
+    command: "--max_connections=1000"
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadb_data:/var/lib/mysql:rw
+    env_file:
+      - env/mariadb.env
+    networks:
+      - aberfitness
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_logs:/var/log/nginx/:rw
+      - shared_certs:/certs/:ro
+    networks:
+      - aberfitness
+    depends_on:
+      - challenges
+      - comms
+      - booking-facilities
+      - gatekeeper
+      - glados
+      - health-dashboard
+      - health-data-repository
+      - ladders
+      - layout-service
+      - user-groups
+
+
+
+## AberFitness containers
+  booking-facilities:
+    image: sem56402018/booking-facilities:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/booking-facilities.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  comms:
+    image: sem56402018/comms:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/comms.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+
+  challenges:
+    image: sem56402018/challenges:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/challenges.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  fitbit-ingest-service:
+    image: sem56402018/fitbit-ingest-service:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/fitbit-ingest-service.env
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+      - syslogng
+
+  gatekeeper:
+    image: sem56402018/gatekeeper:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+      - shared_keys:/keys:rw
+    env_file:
+      - env/gatekeeper.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  glados:
+    image: sem56402018/glados:${DEPLOYMENT_TAG}
+    env_file:
+      - env/glados.env
+    networks: 
+      - aberfitness
+    depends_on:
+      - mariadb
+      - syslogng
+
+  health-dashboard:
+    image: sem56402018/health-dashboard:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/health-dashboard.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb    
+
+  health-data-repository:
+    image: sem56402018/health-data-repository:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/health-data-repository.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  ladders:
+    image: sem56402018/ladders:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/ladders.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  layout-service:
+    image: sem56402018/layout-service:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/layout-service.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+  user-groups:
+    image: sem56402018/user-groups:${DEPLOYMENT_TAG}
+    volumes:
+      - shared_certs:/certs:ro
+    env_file:
+      - env/user-groups.env
+    environment:
+    - Layout__LayoutServiceUrl=${Layout__LayoutServiceUrl}
+    - Audit__GladosUrl=${Audit__GladosUrl}
+    networks:
+      - aberfitness
+    depends_on:
+      - mariadb
+
+networks:
+  aberfitness:
+
+volumes:
+  shared_certs:
+  shared_keys:
+  syslog_logs:
+  nginx_logs:
+  mariadb_data:
+  

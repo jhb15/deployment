@@ -1,2 +1,3 @@
-# Make sure files in /mount are not entered
-mount/*
+# Avoid accidentally comitting .env files with secrets
+*.env
+!*.example.env
