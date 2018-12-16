@@ -90,7 +90,6 @@ services:
       - aberfitness
     depends_on:
       - mariadb
-      - syslogng
 
   gatekeeper:
     image: sem56402018/gatekeeper:${DEPLOYMENT_TAG}
@@ -115,7 +114,6 @@ services:
       - aberfitness
     depends_on:
       - mariadb
-      - syslogng
 
   health-dashboard:
     image: sem56402018/health-dashboard:${DEPLOYMENT_TAG}
@@ -193,7 +191,6 @@ networks:
 volumes:
   shared_certs:
   shared_keys:
-  syslog_logs:
   nginx_logs:
   mariadb_data:
   
